@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AgriPredict AI offers intelligent crop yield prediction and optimization using AI. Get accurate forecasts and actionable farming recommendations.">
+    <meta name="keywords" content="crop yield, agriculture, AI, farming, prediction, optimization, sustainable agriculture">
+    <title>AgriPredict AI | Intelligent Crop Yield Prediction & Optimization</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs/lib/anime.iife.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fdfdfd;
+            color: #333;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Stunning Header Animation */
+        .header-slider {
+            animation: slide 30s linear infinite;
+        }
+        
+        .header-slider img {
+            transition: transform 0.5s ease;
+        }
+
+        .header-slider:hover img {
+            transform: scale(1.05);
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* Interactive Button Styles */
+        .voice-btn, .read-aloud-btn {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .voice-btn:hover, .read-aloud-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .voice-btn.listening, .read-aloud-btn.listening {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(74, 222, 128, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        }
+        
+        /* Professional Card Hover Effect */
+        .crop-card {
+            transition: all 0.4s ease-in-out;
+        }
+        .crop-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .crop-card:hover img {
+            transform: scale(1.05);
+        }
+        .crop-card img {
+            transition: transform 0.4s ease-in-out;
+        }
+
+        /* Animated Underline for Nav */
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            padding-bottom: 4px;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #4ade80; /* green-400 */
+            transform-origin: bottom right;
+            transition: transform 0.25s ease-out;
+        }
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* Animated Heading Text */
+        .anime-text .letter {
+            display: inline-block;
+            line-height: 1em;
+            opacity: 0;
+        }
+
+        /* CropBot Label Styling */
+        #cropbot-label {
+            position: fixed;
+            bottom: 38px; /* Fine-tuned vertical alignment */
+            right: 100px;
+            padding: 8px 16px;
+            background-color: white;
+            color: #16a34a; /* Tailwind green-600 */
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 9998;
+            opacity: 0; /* Start hidden */
+            animation: fadeInLabel 0.5s 1.5s forwards; /* Fade in after page load */
+            white-space: nowrap;
+        }
+
+        #cropbot-label::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            border-width: 8px;
+            border-style: solid;
+            border-color: transparent transparent transparent white;
+            filter: drop-shadow(1px 0px 1px rgba(0,0,0,0.05));
+        }
+        
+        @keyframes fadeInLabel {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-green-900 shadow-2xl">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30"></div>
+        <div class="relative flex items-center justify-between px-6 lg:px-12 py-4">
+            <div class="flex items-center space-x-3">
+                <h1 class="text-2xl font-bold text-white tracking-wider">AgriPredict AI</h1>
+            </div>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#" class="text-white hover:text-green-200 transition nav-link">Home</a>
+                <a href="login.html" class="text-white hover:text-green-200 transition nav-link">Log in</a>
+                <a href="#" class="text-white hover:text-green-200 transition nav-link">About</a>
+            </nav>
+            <button class="md:hidden text-white">
+                <i data-feather="menu"></i>
+            </button>
+        </div>
+        
+        <div class="relative h-[28rem] md:h-[32rem] flex items-center justify-center">
+            <div class="absolute inset-0 flex header-slider w-[200%]">
+                <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Lush vegetable farm" class="w-1/4 h-full object-cover">
+                <img src="https://images.unsplash.com/photo-1492496913980-501348b61469?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Green rice field" class="w-1/4 h-full object-cover">
+                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Vibrant corn field" class="w-1/4 h-full object-cover">
+                <img src="https://images.unsplash.com/photo-1719338950449-994b80b7a1c4?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Golden wheat field" class="w-1/4 h-full object-cover">
+                <!-- Duplicate images for seamless loop -->
+                <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Lush vegetable farm" class="w-1/4 h-full object-cover">
+                <img src="https://images.unsplash.com/photo-1492496913980-501348b61469?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Green rice field" class="w-1/4 h-full object-cover">
+                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Vibrant corn field" class="w-1/4 h-full object-cover">
+                <img src="https://images.unsplash.com/photo-1719338950449-994b80b7a1c4?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Golden wheat field" class="w-1/4 h-full object-cover">
+            </div>
+            
+            <div class="relative z-10 px-6 md:px-12 text-center w-full">
+                <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-4 anime-text" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.6);">Smarter Farming, Bountiful Harvests.</h2>
+                <p class="text-lg md:text-xl text-green-100 mb-8 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="500">
+                    Harnessing the power of AI to bring you accurate yield forecasts and actionable farming recommendations.
+                </p>
+                <a href="signup.html" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105 inline-block shadow-lg" data-aos="fade-up" data-aos-delay="700">
+                    Get Started/Sign Up
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="container mx-auto px-4 py-16">
+        <!-- Prototype Test Section -->
+        <section class="mb-20" data-aos="fade-up">
+            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-10 max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Test Our AI Prototype</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto mb-8">
+                    Engage with our ML Model to get instantly Predicted Crop Yields. Also get AI-driven recommendations for better crop yields and sustainable agriculture.
+                </p>
+                <a href="index.html" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105 inline-block shadow-md">
+                    Try Our Prototype-v1.0 Now
+                </a>
+            </div>
+        </section>
+
+        <script type="module">
+            import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+            Chatbot.init({
+                chatflowid: "075518b6-3f8b-45eb-94b2-367a63b595d6",
+                apiHost: "https://cloud.flowiseai.com",
+                theme: {
+                    button: {
+                        backgroundColor: "#16a34a",
+                        size: "large",
+                        iconColor: "white"
+                    }
+                }
+            })
+        </script>
+
+
+        <!-- AI Recommendations Section -->
+        <section class="mb-20" data-aos="fade-up">
+            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-10 max-w-4xl mx-auto">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-3 sm:mb-0">AI Recommendations</h2>
+                    <button id="read-aloud-btn" class="read-aloud-btn bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full flex items-center gap-2" aria-label="Read recommendations aloud">
+                        <i data-feather="volume-2" class="w-5 h-5"></i>
+                        <span class="text-sm font-medium">Read Aloud</span>
+                    </button>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="bg-gray-50 rounded-lg p-5 flex items-start transition hover:bg-gray-100">
+                        <div class="flex-shrink-0 bg-green-100 p-3 rounded-full mr-4">
+                            <i data-feather="sun" class="text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg text-gray-800">Optimal Planting Window</h3>
+                            <p class="text-gray-600 mt-1">Based on current weather patterns, the best time to plant corn in your region is between April 15th and May 5th.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-5 flex items-start transition hover:bg-gray-100">
+                        <div class="flex-shrink-0 bg-blue-100 p-3 rounded-full mr-4">
+                            <i data-feather="droplet" class="text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg text-gray-800">Irrigation Schedule</h3>
+                            <p class="text-gray-600 mt-1">Your soil moisture levels suggest increasing irrigation to 1.5 inches per week during the current growth stage.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-5 flex items-start transition hover:bg-gray-100">
+                        <div class="flex-shrink-0 bg-purple-100 p-3 rounded-full mr-4">
+                            <i data-feather="shield" class="text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg text-gray-800">Pest Control</h3>
+                            <p class="text-gray-600 mt-1">Increased risk of corn borers detected. Consider applying Bacillus thuringiensis (Bt) in the next 7-10 days.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Crop Prediction Cards Section -->
+        <section>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12" data-aos="fade-up">Explore Crop-Specific Predictions</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Rice Card -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden crop-card transition" data-aos="fade-up" data-aos-delay="100">
+                    <div class="overflow-hidden"><img src="https://images.unsplash.com/photo-1723475158232-819e29803f4d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Rice field" class="w-full h-56 object-cover"></div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Rice</h3>
+                        <p class="text-gray-600 mb-4">Get precise yield predictions and cultivation recommendations for your rice crops.</p>
+                        <button class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition w-full">
+                            View Predictions
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pulses Card -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden crop-card transition" data-aos="fade-up" data-aos-delay="200">
+                    <div class="overflow-hidden"><img src="https://images.unsplash.com/photo-1705475388190-775066fd69a5?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Field of pulses" class="w-full h-56 object-cover"></div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Pulses</h3>
+                        <p class="text-gray-600 mb-4">Optimize your pulses production with AI-powered insights and forecasts.</p>
+                        <button class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition w-full">
+                            View Predictions
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Wheat Card -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden crop-card transition" data-aos="fade-up" data-aos-delay="300">
+                    <div class="overflow-hidden"><img src="https://images.unsplash.com/photo-1719338950449-994b80b7a1c4?q=80&w=1931&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Golden wheat field" class="w-full h-56 object-cover"></div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Wheat</h3>
+                        <p class="text-gray-600 mb-4">Maximize wheat yield with data-driven strategies for planting and harvesting.</p>
+                        <button class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition w-full">
+                            View Predictions
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- CropBot Label -->
+    <div id="cropbot-label">CropBot</div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">AgriPredict AI</h3>
+                    <p class="text-gray-400">Empowering farmers with AI-driven insights for better crop yields and sustainable agriculture.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Features</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">About</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Log In</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Support</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Community</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
+                    <address class="not-italic text-gray-400">
+                        <p>SRI Ramakrishna Institute of Technology, Coimbatore</p>
+                        <p class="mt-2">Email: gradientdescenters@gmail.com</p>
+                    </address>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 AgriPredict AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        // --- Stunning Header Text Animation ---
+        const textWrapper = document.querySelector('.anime-text');
+        if (textWrapper) {
+            textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+            anime.timeline({loop: false})
+              .add({
+                targets: '.anime-text .letter',
+                opacity: [0,1],
+                translateY: ["1.1em", 0],
+                translateX: ["0.55em", 0],
+                translateZ: 0,
+                rotateZ: [180, 0],
+                duration: 750,
+                easing: "easeOutExpo",
+                delay: (el, i) => 50 * i
+              });
+        }
+        
+        // --- Voice/Audio Button Functionality ---
+        const readAloudBtn = document.getElementById('read-aloud-btn');
+        
+        if (readAloudBtn) {
+            readAloudBtn.addEventListener('click', function() {
+                this.classList.toggle('listening');
+                // In a real implementation, this would use the Web Speech API to read the recommendations
+                setTimeout(() => {
+                    this.classList.remove('listening');
+                }, 3000); // Simulate reading for 3 seconds
+            });
+        }
+        
+        feather.replace();
+    </script>
+</body>
+</html>
+
